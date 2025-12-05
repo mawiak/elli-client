@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/marcszy91/elli-client/compare/v1.0.3...v1.1.0) (2025-12-05)
+
+
+### Features
+
+* add function to get charging records as pdf ([796d537](https://github.com/marcszy91/elli-client/commit/796d5371b65c265fe3933590c53366b910465a08))
+
 ## [1.0.3](https://github.com/marcszy91/elli-client/compare/v1.0.2...v1.0.3) (2025-11-14)
 
 
