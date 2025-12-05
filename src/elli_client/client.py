@@ -336,6 +336,61 @@ class ElliAPIClient:
 
         return response.json()
 
+    def get_charging_records_pdf(
+        self,
+        station_id: str,
+        rfid_card_id: str,
+        created_at_after: str,
+        created_at_before: str,
+        pdf_timezone: str = "Europe/Berlin",
+    ) -> bytes:
+        """
+        Get charging records as PDF invoice for a specific time period.
+
+        Args:
+            station_id: The ID of the charging station
+            rfid_card_id: RFID card ID to filter records
+            created_at_after: Start timestamp in ISO 8601 format (e.g., "2025-10-31T23:00:00Z")
+            created_at_before: End timestamp in ISO 8601 format (e.g., "2025-11-30T22:59:00Z")
+            pdf_timezone: Timezone for the PDF (default: "Europe/Berlin")
+
+        Returns:
+            PDF file content as bytes
+
+        Raises:
+            ValueError: If not authenticated or API request fails
+
+        Example:
+            >>> client = ElliAPIClient()
+            >>> client.login("user@example.com", "password")
+            >>> pdf_data = client.get_charging_records_pdf(
+            ...     station_id="a1b2c3d4-1234-5678-abcd-1234567890ab",
+            ...     rfid_card_id="e5f6g7h8-5678-9012-efgh-5678901234cd",
+            ...     created_at_after="2025-10-31T23:00:00Z",
+            ...     created_at_before="2025-11-30T22:59:00Z"
+            ... )
+            >>> with open("invoice.pdf", "wb") as f:
+            ...     f.write(pdf_data)
+        """
+        params = {
+            "station_id": station_id,
+            "rfid_card_id": rfid_card_id,
+            "pdf_timezone": pdf_timezone,
+            "created_at_after": created_at_after,
+            "created_at_before": created_at_before,
+        }
+
+        response = self.client.get(
+            f"{self.api_base_url}/chargeathome/v1/chargingrecords/pdf",
+            headers=self._get_headers(),
+            params=params,
+        )
+
+        if response.status_code != 200:
+            raise ValueError(f"Failed to get charging records PDF: {response.status_code} - {response.text}")
+
+        return response.content
+
     def close(self):
         """
         Close the HTTP client and cleanup resources.
