@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/marcszy91/elli-client/compare/v1.1.0...v1.1.1) (2025-12-06)
+
+
+### Bug Fixes
+
+* ignore external env ([11bd148](https://github.com/marcszy91/elli-client/commit/11bd14803e5cf6664d2ed0000c6a9f89f99e7c13))
+
 ## [1.1.0](https://github.com/marcszy91/elli-client/compare/v1.0.3...v1.1.0) (2025-12-05)
 
 
