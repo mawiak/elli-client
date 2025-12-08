@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, urljoin, urlparse
 import httpx
 
 from .config import settings
-from .models import ChargingSession, Station, TokenResponse
+from .models import ChargingSession, RFIDCard, Station, TokenResponse
 
 
 class ElliAPIClient:
@@ -390,6 +390,32 @@ class ElliAPIClient:
             raise ValueError(f"Failed to get charging records PDF: {response.status_code} - {response.text}")
 
         return response.content
+
+    def get_rfid_cards(self) -> list[RFIDCard]:
+        """
+        Get all RFID cards associated with the account.
+
+        Returns:
+            List of RFIDCard objects containing:
+            - Card ID and number
+            - Status (e.g., "active")
+            - Brand and tenant information
+            - Creation and update timestamps
+
+        Raises:
+            ValueError: If not authenticated or API request fails
+        """
+        response = self.client.get(f"{self.api_base_url}/customer/v1/rfidcards", headers=self._get_headers())
+
+        if response.status_code != 200:
+            raise ValueError(f"Failed to get RFID cards: {response.status_code} - {response.text}")
+
+        data = response.json()
+        cards = []
+        for card_data in data:
+            cards.append(RFIDCard(**card_data))
+
+        return cards
 
     def close(self):
         """
