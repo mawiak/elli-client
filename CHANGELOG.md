@@ -1,3 +1,10 @@
+## [1.3.0](https://github.com/mawiak/elli-client/compare/v1.2.0...v1.3.0) (2026-05-24)
+
+
+### Features
+
+* allow export all chargin session without filter (include app) ([e02e0fb](https://github.com/mawiak/elli-client/commit/e02e0fbd66b9a2db08f03e2cba3f5b989016c5bc))
+
 ## [1.2.0](https://github.com/marcszy91/elli-client/compare/v1.1.1...v1.2.0) (2025-12-08)
 
 
