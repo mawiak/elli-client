@@ -339,7 +339,7 @@ class ElliAPIClient:
     def get_charging_records_pdf(
         self,
         station_id: str,
-        rfid_card_id: str,
+        rfid_card_id: Optional[str],
         created_at_after: str,
         created_at_before: str,
         pdf_timezone: str = "Europe/Berlin",
@@ -349,7 +349,7 @@ class ElliAPIClient:
 
         Args:
             station_id: The ID of the charging station
-            rfid_card_id: RFID card ID to filter records
+            rfid_card_id: RFID card ID to filter records (None = all sessions including App)
             created_at_after: Start timestamp in ISO 8601 format (e.g., "2025-10-31T23:00:00Z")
             created_at_before: End timestamp in ISO 8601 format (e.g., "2025-11-30T22:59:00Z")
             pdf_timezone: Timezone for the PDF (default: "Europe/Berlin")
@@ -363,6 +363,14 @@ class ElliAPIClient:
         Example:
             >>> client = ElliAPIClient()
             >>> client.login("user@example.com", "password")
+            >>> # Get all charging sessions (RFID + App)
+            >>> pdf_data = client.get_charging_records_pdf(
+            ...     station_id="a1b2c3d4-1234-5678-abcd-1234567890ab",
+            ...     rfid_card_id=None,
+            ...     created_at_after="2025-10-31T23:00:00Z",
+            ...     created_at_before="2025-11-30T22:59:00Z"
+            ... )
+            >>> # Or filter by specific RFID card
             >>> pdf_data = client.get_charging_records_pdf(
             ...     station_id="a1b2c3d4-1234-5678-abcd-1234567890ab",
             ...     rfid_card_id="e5f6g7h8-5678-9012-efgh-5678901234cd",
@@ -374,11 +382,14 @@ class ElliAPIClient:
         """
         params = {
             "station_id": station_id,
-            "rfid_card_id": rfid_card_id,
             "pdf_timezone": pdf_timezone,
             "created_at_after": created_at_after,
             "created_at_before": created_at_before,
         }
+
+        # Only add rfid_card_id if provided (None = all sessions)
+        if rfid_card_id is not None:
+            params["rfid_card_id"] = rfid_card_id
 
         response = self.client.get(
             f"{self.api_base_url}/chargeathome/v1/chargingrecords/pdf",
